@@ -1,164 +1,158 @@
-import turtle as t
+import pygame
 import random
-import time
-
-d = 0.1
-s = 0
-hs = 0
-run = True
-
-# SCREEN SPECIFICATIONS
-sc = t.Screen()
-sc.title("Learn2Slither")
-sc.bgcolor("White")
-sc.setup(width=600, height=600)
-sc.tracer(0)
 
 
-def draw_grid(size=600, cells=10):
-    step = size // cells
+snake_speed = 5
 
-    grid = t.Turtle()
-    grid.speed(0)
-    grid.color("lightgray")
-    grid.penup()
-    grid.hideturtle()
+GRID_SIZE = 10
+CELL_SIZE = 65
 
-    for x in range(-size//2, size//2 + 1, step):
-        grid.penup()
-        grid.goto(x, -size//2)
-        grid.pendown()
-        grid.goto(x, size//2)
+window_x = GRID_SIZE * CELL_SIZE
+window_y = GRID_SIZE * CELL_SIZE
 
-    for y in range(-size//2, size//2 + 1, step):
-        grid.penup()
-        grid.goto(-size//2, y)
-        grid.pendown()
-        grid.goto(size//2, y)
+light_gray = pygame.Color(220, 220, 220)
+grid_color = pygame.Color(160, 160, 160)
+snake_color = pygame.Color(0, 100, 220)
+green = pygame.Color(0, 200, 0)
+red = pygame.Color(220, 0, 0)
+
+pygame.init()
+pygame.display.set_caption("Learn2Slither")
+game_window = pygame.display.set_mode((window_x, window_y))
+fps = pygame.time.Clock()
 
 
-# SNAKE HEAD SPECIFICATIONS
-h = t.Turtle()
-h.shape("square")
-h.color("blue")
-h.shapesize(stretch_wid=3, stretch_len=3)
-h.penup()
-h.goto(0, 0)
-h.direction = "Stop"
-
-# FOOD SPECIFICATIONS
-f = t.Turtle()
-f.shape("square")
-f.color("green")
-f.shapesize(stretch_wid=3, stretch_len=3)
-f.penup()
-f.goto(0, 0)
-
-
-def up():
-    if h.direction != "down":
-        h.direction = "up"
+def spawn_snake():
+    direction = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
+    if direction == 'RIGHT':
+        x = random.randrange(2, GRID_SIZE) * CELL_SIZE
+        y = random.randrange(0, GRID_SIZE) * CELL_SIZE
+        body = [[x, y], [x - CELL_SIZE, y], [x - 2 * CELL_SIZE, y]]
+    elif direction == 'LEFT':
+        x = random.randrange(0, GRID_SIZE - 2) * CELL_SIZE
+        y = random.randrange(0, GRID_SIZE) * CELL_SIZE
+        body = [[x, y], [x + CELL_SIZE, y], [x + 2 * CELL_SIZE, y]]
+    elif direction == 'UP':
+        x = random.randrange(0, GRID_SIZE) * CELL_SIZE
+        y = random.randrange(2, GRID_SIZE) * CELL_SIZE
+        body = [[x, y], [x, y + CELL_SIZE], [x, y + 2 * CELL_SIZE]]
+    else:  # DOWN
+        x = random.randrange(0, GRID_SIZE) * CELL_SIZE
+        y = random.randrange(0, GRID_SIZE - 2) * CELL_SIZE
+        body = [[x, y], [x, y - CELL_SIZE], [x, y - 2 * CELL_SIZE]]
+    return list(body[0]), direction, body
 
 
-def down():
-    if h.direction != "up":
-        h.direction = "down"
+def spawn_fruit(excluded):
+    while True:
+        pos = [
+            random.randrange(0, GRID_SIZE) * CELL_SIZE,
+            random.randrange(0, GRID_SIZE) * CELL_SIZE
+        ]
+        if pos not in excluded:
+            return pos
 
 
-def left():
-    if h.direction != "right":
-        h.direction = "left"
+def draw_grid():
+    game_window.fill(light_gray)
+    for x in range(0, window_x + 1, CELL_SIZE):
+        pygame.draw.line(game_window, grid_color, (x, 0), (x, window_y))
+    for y in range(0, window_y + 1, CELL_SIZE):
+        pygame.draw.line(game_window, grid_color, (0, y), (window_x, y))
 
 
-def right():
-    if h.direction != "left":
-        h.direction = "right"
+def draw_cell(color, pos):
+    pygame.draw.rect(
+        game_window,
+        color,
+        pygame.Rect(
+            pos[0] + 2, pos[1] + 2, CELL_SIZE - 4, CELL_SIZE - 4
+        )
+    )
 
 
-def move():
-
-    if h.direction == "up":
-        h.sety(h.ycor() + 20)
-
-    elif h.direction == "down":
-        h.sety(h.ycor() - 20)
-
-    elif h.direction == "left":
-        h.setx(h.xcor() - 20)
-
-    elif h.direction == "right":
-        h.setx(h.xcor() + 20)
+def game_over():
+    pygame.quit()
+    quit()
 
 
-sc.listen()
+snake_position, direction, snake_body = spawn_snake()
+change_to = direction
 
+fruit1 = spawn_fruit(snake_body)
+fruit2 = spawn_fruit(snake_body + [fruit1])
+fruit_red = spawn_fruit(snake_body + [fruit1, fruit2])
 
-sc.onkeypress(up, "Up")
-sc.onkeypress(down, "Down")
-sc.onkeypress(left, "Left")
-sc.onkeypress(right, "Right")
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                change_to = 'UP'
+            if event.key == pygame.K_DOWN:
+                change_to = 'DOWN'
+            if event.key == pygame.K_LEFT:
+                change_to = 'LEFT'
+            if event.key == pygame.K_RIGHT:
+                change_to = 'RIGHT'
+            if event.key == pygame.K_ESCAPE:
+                game_over()
 
+    if change_to == 'UP' and direction != 'DOWN':
+        direction = 'UP'
+    if change_to == 'DOWN' and direction != 'UP':
+        direction = 'DOWN'
+    if change_to == 'LEFT' and direction != 'RIGHT':
+        direction = 'LEFT'
+    if change_to == 'RIGHT' and direction != 'LEFT':
+        direction = 'RIGHT'
 
-seg = []
+    if direction == 'UP':
+        snake_position[1] -= CELL_SIZE
+    if direction == 'DOWN':
+        snake_position[1] += CELL_SIZE
+    if direction == 'LEFT':
+        snake_position[0] -= CELL_SIZE
+    if direction == 'RIGHT':
+        snake_position[0] += CELL_SIZE
 
-while run:
-    draw_grid(600, 10)
-    try:
-        sc.update()
+    if snake_position[0] < 0 or snake_position[0] >= window_x:
+        game_over()
+    if snake_position[1] < 0 or snake_position[1] >= window_y:
+        game_over()
 
-        # wall collision
-        if abs(h.xcor()) > 290 or abs(h.ycor()) > 290:
-            time.sleep(1)
-            h.goto(0, 0)
-            h.direction = "Stop"
+    for block in snake_body[1:]:
+        if snake_position == block:
+            game_over()
 
-            for segment in seg:
-                segment.goto(1000, 1000)
-            seg.clear()
+    ate_green1 = (snake_position == fruit1)
+    ate_green2 = (snake_position == fruit2)
+    ate_red = (snake_position == fruit_red)
 
-            s = 0
-            d = 0.1
+    snake_body.insert(0, list(snake_position))
 
-        # food collision
-        if h.distance(f) < 20:
-            f.goto(random.randint(-270, 270), random.randint(-270, 270))
-            new_seg = t.Turtle()
-            new_seg.shape("square")
-            new_seg.shapesize(stretch_len=3, stretch_wid=3)
-            new_seg.color("blue")
-            new_seg.penup()
-            seg.append(new_seg)
-            d -= 0.001
-            s += 10
+    if ate_green1:
+        fruit1 = spawn_fruit(snake_body + [fruit2, fruit_red])
+    elif ate_green2:
+        fruit2 = spawn_fruit(snake_body + [fruit1, fruit_red])
+    elif ate_red:
+        snake_body.pop()
+        snake_body.pop()
+        if len(snake_body) == 0:
+            game_over()
+        fruit_red = spawn_fruit(snake_body + [fruit1, fruit2])
+    else:
+        snake_body.pop()
 
-            if s > hs:
-                hs = s
+    draw_grid()
 
-        # move body
-        for i in range(len(seg) - 1, 0, -1):
-            x = seg[i - 1].xcor()
-            y = seg[i - 1].ycor()
-            seg[i].goto(x, y)
+    for pos in snake_body:
+        draw_cell(snake_color, pos)
 
-        if seg:
-            seg[0].goto(h.xcor(), h.ycor())
-        move()
+    draw_cell(green, fruit1)
+    draw_cell(green, fruit2)
+    draw_cell(red, fruit_red)
 
-        # self collision
-        for segment in seg:
-            if segment.distance(h) < 20:
-                time.sleep(1)
-                h.goto(0, 0)
-                h.direction = "Stop"
-
-                for segment in seg:
-                    segment.goto(1000, 1000)
-                seg.clear()
-
-                s = 0
-                d = 0.1
-
-        time.sleep(d)
-
-    except t.Terminator:
-        run = False
+    pygame.display.update()
+    fps.tick(snake_speed)
