@@ -1,18 +1,21 @@
-from game_logic import (
-    snake_position, CELL_SIZE, GRID_SIZE, 
-    fruit1, fruit2, fruit_red, snake_body)
 
-
-old_map = ([["0" for _ in range(GRID_SIZE)]
-            for _ in range(GRID_SIZE)])
-
-
-def fill_map(old_map):
+def fill_map(
+    snake_position,
+    snake_body,
+    fruit1,
+    fruit2,
+    fruit_red,
+    GRID_SIZE,
+    CELL_SIZE,
+):
+    old_map = [
+        ['0' for _ in range(GRID_SIZE)]
+        for _ in range(GRID_SIZE)
+    ]
     for i, ligne in enumerate(old_map):
         for j, element in enumerate(ligne):
             if (
-                [j, i] == [fruit1[0] // CELL_SIZE,
-                           fruit1[1] // CELL_SIZE]
+                [j, i] == [fruit1[0] // CELL_SIZE, fruit1[1] // CELL_SIZE]
                 or [j, i] == [fruit2[0] // CELL_SIZE,
                               fruit2[1] // CELL_SIZE]
             ):
@@ -28,18 +31,14 @@ def fill_map(old_map):
             ):
                 old_map[i][j] = "H"
             elif any(
-                [j, i] == [segment[0] // CELL_SIZE,
-                           segment[1] // CELL_SIZE]
+                [j, i] == [segment[0] // CELL_SIZE, segment[1] // CELL_SIZE]
                 for segment in snake_body
             ):
                 old_map[i][j] = "S"
     return old_map
 
 
-new_map = fill_map(old_map)
-
-
-def get_vision(new_map) -> list:
+def get_vision(new_map, snake_position, CELL_SIZE) -> list:
     x, y = None, None
     for i, ligne in enumerate(new_map):
         for j, element in enumerate(ligne):
@@ -60,12 +59,6 @@ def get_vision(new_map) -> list:
     return vision_snake
 
 
-snake_vision = get_vision(new_map=new_map)
-
-
 def print_map(mtrx):
     for ligne in mtrx:
         print(ligne, "\n")
-
-
-print_map(snake_vision)

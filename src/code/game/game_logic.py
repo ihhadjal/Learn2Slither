@@ -1,5 +1,8 @@
 import pygame
 import random
+from model_vision import (
+    fill_map, get_vision, print_map
+)
 
 
 snake_speed = 3.5
@@ -158,6 +161,22 @@ def game_logic(direction, change_to, fruit1, fruit2, fruit_red, ):
 
         pygame.display.update()
         fps.tick(snake_speed)
+
+        new_map = fill_map(
+            snake_position,
+            snake_body,
+            fruit1,
+            fruit2,
+            fruit_red,
+            GRID_SIZE,
+            CELL_SIZE,
+        )
+        vision = get_vision(
+            new_map=new_map,
+            snake_position=snake_position,
+            CELL_SIZE=CELL_SIZE,
+        )
+        print_map(vision)
 
 
 if __name__ == "__main__":
