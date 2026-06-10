@@ -11,10 +11,7 @@ def fill_map(
         ['0' for _ in range(GRID_SIZE + 1)]
         for _ in range(GRID_SIZE + 1)
     ]
-    wall = ['W' for _ in range(GRID_SIZE + 1)]
 
-    old_map.insert(0, wall)
-    old_map.append(wall)
     for i, ligne in enumerate(old_map):
         for j, element in enumerate(ligne):
             if (
@@ -38,12 +35,16 @@ def fill_map(
                 for segment in snake_body
             ):
                 old_map[i][j] = "S"
-            if j == GRID_SIZE or j == 0:
-                old_map[i][j] = "W"
     return old_map
 
 
-def get_vision(new_map, snake_position, CELL_SIZE) -> list:
+def get_case(new_map, row, col, GRID_SIZE):
+    if row < 0 or row >= GRID_SIZE or col < 0 or col >= GRID_SIZE:
+        return 'W'
+    return new_map[row][col]
+
+
+def get_vision(new_map, snake_position, CELL_SIZE, GRID_SIZE) -> list:
     x, y = None, None
     for i, ligne in enumerate(new_map):
         for j, element in enumerate(ligne):
@@ -57,7 +58,7 @@ def get_vision(new_map, snake_position, CELL_SIZE) -> list:
         ligne_vue = []
         for j in range(len(new_map[i])):
             if i == x or j == y:
-                ligne_vue.append(new_map[i][j])
+                ligne_vue.append(get_case(new_map, i, j, GRID_SIZE))
             else:
                 ligne_vue.append(" ")
         vision_snake.append(ligne_vue)

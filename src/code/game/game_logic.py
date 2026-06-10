@@ -175,6 +175,7 @@ def game_logic(direction, change_to, fruit1, fruit2, fruit_red, ):
             new_map=new_map,
             snake_position=snake_position,
             CELL_SIZE=CELL_SIZE,
+            GRID_SIZE=GRID_SIZE
         )
         print_map(vision)
 
