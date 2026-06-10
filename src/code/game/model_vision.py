@@ -1,4 +1,3 @@
-
 def fill_map(
     snake_position,
     snake_body,
@@ -9,9 +8,13 @@ def fill_map(
     CELL_SIZE,
 ):
     old_map = [
-        ['0' for _ in range(GRID_SIZE)]
-        for _ in range(GRID_SIZE)
+        ['0' for _ in range(GRID_SIZE + 1)]
+        for _ in range(GRID_SIZE + 1)
     ]
+    wall = ['W' for _ in range(GRID_SIZE + 1)]
+
+    old_map.insert(0, wall)
+    old_map.append(wall)
     for i, ligne in enumerate(old_map):
         for j, element in enumerate(ligne):
             if (
@@ -35,6 +38,8 @@ def fill_map(
                 for segment in snake_body
             ):
                 old_map[i][j] = "S"
+            if j == GRID_SIZE or j == 0:
+                old_map[i][j] = "W"
     return old_map
 
 

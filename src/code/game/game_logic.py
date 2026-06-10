@@ -28,7 +28,7 @@ fps = pygame.time.Clock()
 def spawn_snake():
     direction = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
     if direction == 'RIGHT':
-        x = random.randrange(2, GRID_SIZE) * CELL_SIZE
+        x = random.randrange(3, GRID_SIZE) * CELL_SIZE
         y = random.randrange(0, GRID_SIZE) * CELL_SIZE
         body = [[x, y], [x - CELL_SIZE, y], [x - 2 * CELL_SIZE, y]]
     elif direction == 'LEFT':
@@ -37,7 +37,7 @@ def spawn_snake():
         body = [[x, y], [x + CELL_SIZE, y], [x + 2 * CELL_SIZE, y]]
     elif direction == 'UP':
         x = random.randrange(0, GRID_SIZE) * CELL_SIZE
-        y = random.randrange(2, GRID_SIZE) * CELL_SIZE
+        y = random.randrange(3, GRID_SIZE) * CELL_SIZE
         body = [[x, y], [x, y + CELL_SIZE], [x, y + 2 * CELL_SIZE]]
     else:  # DOWN
         x = random.randrange(0, GRID_SIZE) * CELL_SIZE
@@ -49,8 +49,8 @@ def spawn_snake():
 def spawn_fruit(excluded):
     while True:
         pos = [
-            random.randrange(0, GRID_SIZE) * CELL_SIZE,
-            random.randrange(0, GRID_SIZE) * CELL_SIZE
+            random.randrange(3, GRID_SIZE) * CELL_SIZE,
+            random.randrange(3, GRID_SIZE) * CELL_SIZE
         ]
         if pos not in excluded:
             return pos
