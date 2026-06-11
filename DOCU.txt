@@ -1,0 +1,72 @@
+IMPLEMENTATION D'UN ALGO WLEARNING EN UTILISANT TENSORFLOW
+
+qu est ce que le qlearning? => le qlearning est ce qu on appelle un algorithme de reinforcement,
+son objectif est donc de maximiser la recompense que l'agent donne au systeme qui apprend,
+pour chaque choix du systeme l'agent lui attribue une recompense (positive ou negative),
+donc le systeme va se baser sur les recompense qui lui ont ete attribue pour faire ses choix
+
+en generales les etapes dun algorithme de reinforcement peuvent etre resume a celles ci:
+
+- observation de l'environnement
+
+- choix de l'action a prendre
+
+- executer l'action
+
+- reception d'une recompense (positive ou negative)
+
+- apprentissage par experience
+
+- iteration
+
+le Qlearning est donc un algorithme qui va quantifier la qualite dune action par rapport a l'etat de,
+l'environnement, il utilise l'equation de Bellmann pour calculer un etat et la qualite de cet etat par
+rapport a lenvironnement
+
+
+la difference avec les autres projet de machine learning ca va etre le dataset, dans les autres projets
+nous avions un dataset a utiliser pour que le modele base ses decisions sur ce dataset la
+
+ici l'agent genere son propre dataset et apprend pendant quil joue, sa seule supervision va donc etre 
+la recompense que on lui donne
+
+
+l'objectif de l'agent n'est pas forcement de maximiser la recompense immediate mais le retour de toutes
+les actions sur la partie
+
+donc plutot que predire quelle serait la meilleur action immediate, l'agent doit apprendre a estimer
+la qualite de ses actions sur le long terme dans un etat donne, c'est ca que l'on apelle une Q-valeur
+
+Q(s,a) = si je suis dans un etat s, et que je fait l'action a, quel est le nombre de recompse que je 
+vais avoir au total a la fin de la partie, si je joue dune maniere optimale
+
+donc avec une bonne Qfunction lagent va simplement choisir dans un etat s quelle est l'action a
+qui va maximiser Q(s,a)
+
+l'implementation la plus simple de cet algo est une Qtable, un tableau ou chaque ligne est un etat
+et chaque colonne est une action, l'agent va donc choisir la valeur maximale dune action par rapport a son etat
+
+
+la seule formule dont on va avoir besoin est l'equation de Bellmann:
+
+Q(s,a)←Q(s,a)+α⋅[r+γ⋅a′max​Q(s′,a′)−Q(s,a)] 
+    => le terme entre crocher represente le calcule de l'erreur
+        donc la difference entre ce qui a ete predis par le model et la vraie valeur a predire, plus la difference
+        est petite et logiquement plus la valeur predite est bonne
+
+le y(gamma) est le facteur de decompte entre 0 et 1, c'est la valeur qui controle combien le futur compte
+plus la valeur est petite et plus l'agent est myope et va choisir seuleemnt les bonnes actions qui sont justes
+dans l'immediat, 
+
+puis α(alpha) est le taux d'aprentissage, il controle la vitesse a laquelle le modele apprends (ecraser l'ancienne 
+valeur par la nouvelle)
+
+le max​Q(s′,a′) cest ce qui va permettre au modele de prendre en compte l'impacte de l'action sur le moment meme
+si on avait pas ca, le modele il se baserait seulement sur la recompense donc il agirait seulemtne de maniere 
+a optimiser l'action au moment meme sans prendre en compte le futur
+
+en quelques mots la logique derriere une qtable est: tu pensait que une action a un etat precis valait x
+mais maintenant quon a vu ce que qui ce passe apres l'avoir applique elle vaut y, donc ajuste toi un peu pour 
+avoir des meilleurs resultats, ca sur des milliers d'iterations va nous donner des qvalues optimisees
+
+
