@@ -99,7 +99,9 @@ def get_vision(
     array.append(found)
 
     if agent_mode:
-        return array
+        # retourne un tuple car en python les listes ne sont
+        # pas hashables
+        return tuple(array)
     else:
         return vision_snake
 
