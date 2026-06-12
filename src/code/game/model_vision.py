@@ -11,7 +11,6 @@ def fill_map(
         ['0' for _ in range(GRID_SIZE + 1)]
         for _ in range(GRID_SIZE + 1)
     ]
-
     for i, ligne in enumerate(old_map):
         for j, element in enumerate(ligne):
             if (
@@ -44,7 +43,9 @@ def get_case(new_map, row, col, GRID_SIZE):
     return new_map[row][col]
 
 
-def get_vision(new_map, snake_position, CELL_SIZE, GRID_SIZE) -> list:
+def get_vision(
+    new_map, snake_position, CELL_SIZE, GRID_SIZE, agent_mode: bool = False
+) -> list:
     x, y = None, None
     for i, ligne in enumerate(new_map):
         for j, element in enumerate(ligne):
@@ -62,7 +63,45 @@ def get_vision(new_map, snake_position, CELL_SIZE, GRID_SIZE) -> list:
             else:
                 ligne_vue.append(" ")
         vision_snake.append(ligne_vue)
-    return vision_snake
+
+    found = "W"
+    array = []
+
+    for i in range(x - 1, -1, -1):
+        cell = get_case(new_map, i, y, GRID_SIZE)
+        if cell != '0' and cell != ' ':
+            found = cell
+            break
+    array.append(found)
+
+    found = "W"
+    for i in range(x + 1, GRID_SIZE):
+        cell = get_case(new_map, i, y, GRID_SIZE)
+        if cell != '0' and cell != ' ':
+            found = cell
+            break
+    array.append(found)
+    found = "W"
+
+    for j in range(y - 1, -1, -1):
+        cell = get_case(new_map, x, j, GRID_SIZE)
+        if cell != '0' and cell != ' ':
+            found = cell
+            break
+    array.append(found)
+    found = "W"
+
+    for j in range(y + 1, GRID_SIZE):
+        cell = get_case(new_map, x, j, GRID_SIZE)
+        if cell != '0' and cell != ' ':
+            found = cell
+            break
+    array.append(found)
+
+    if agent_mode:
+        return array
+    else:
+        return vision_snake
 
 
 def print_map(mtrx):

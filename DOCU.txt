@@ -50,6 +50,7 @@ et chaque colonne est une action, l'agent va donc choisir la valeur maximale dun
 la seule formule dont on va avoir besoin est l'equation de Bellmann:
 
 Q(s,a)←Q(s,a)+α⋅[r+γ⋅a′max​Q(s′,a′)−Q(s,a)] 
+
     => le terme entre crocher represente le calcule de l'erreur
         donc la difference entre ce qui a ete predis par le model et la vraie valeur a predire, plus la difference
         est petite et logiquement plus la valeur predite est bonne
@@ -70,3 +71,17 @@ mais maintenant quon a vu ce que qui ce passe apres l'avoir applique elle vaut y
 avoir des meilleurs resultats, ca sur des milliers d'iterations va nous donner des qvalues optimisees
 
 
+IMPLEMENTATION EN CODE
+
+la premiere chose qui a ete faite cetait la creation du jeu snake, donc un jeu snake tres basique avec les
+contraintes impose par le sujet (aller voir: game_logic.py)
+
+ensuite il fallait reproduire la vision du snake depuis sa tete, pour cela jai cree une liste de liste
+de taille GRID_SIZE et je lai remplis de zero, puis je lai parcorue et en utlisant les coordonnes des 
+elements du jeu (LES POMMES, LES MURS ETC ETC), jai remplace les zero par des lettres correspondantes a chaque
+element par rapport a leur poistion
+
+puis il fallait retourner la vision stricte su snake donc des rayouns dans les 4 directions possibles
+
+pour cela jai cree une liste vide que j'ai remplis avec les elements presents dans la colonne/ligne ou la tete du snake "H"
+est presente, puis je la retourne pour que on puisse l'afficher dans boucle principale du jeu 

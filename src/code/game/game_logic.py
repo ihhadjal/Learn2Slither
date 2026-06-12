@@ -175,9 +175,18 @@ def game_logic(direction, change_to, fruit1, fruit2, fruit_red, ):
             new_map=new_map,
             snake_position=snake_position,
             CELL_SIZE=CELL_SIZE,
-            GRID_SIZE=GRID_SIZE
+            GRID_SIZE=GRID_SIZE,
+            agent_mode=True
+        )
+        vision2 = get_vision(
+            new_map=new_map,
+            snake_position=snake_position,
+            CELL_SIZE=CELL_SIZE,
+            GRID_SIZE=GRID_SIZE,
+            agent_mode=False
         )
         print_map(vision)
+        print_map(vision2)
 
 
 if __name__ == "__main__":
