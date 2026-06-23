@@ -85,3 +85,7 @@ puis il fallait retourner la vision stricte su snake donc des rayouns dans les 4
 
 pour cela jai cree une liste vide que j'ai remplis avec les elements presents dans la colonne/ligne ou la tete du snake "H"
 est presente, puis je la retourne pour que on puisse l'afficher dans boucle principale du jeu 
+
+
+
+la Qtable ca va etre un dictionnaire qui va associer chaque etat du snake a 4 Qvaleurs (1 qvaleur par direction)
