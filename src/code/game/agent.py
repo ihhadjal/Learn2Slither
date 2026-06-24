@@ -39,7 +39,7 @@ class Agent:
 
     def update(self, state, action, reward, next_state):
         if self.learning is False:
-            exit(1)
+            return
 
         action_index = self.actions.index(action)
         actual_q_value = self.q_table[state][action_index]
