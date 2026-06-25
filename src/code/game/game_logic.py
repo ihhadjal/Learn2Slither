@@ -4,7 +4,6 @@ from model_vision import (
     fill_map, get_vision, print_map
 )
 
-
 snake_speed = 3.5
 
 GRID_SIZE = 10
@@ -87,7 +86,7 @@ fruit2 = spawn_fruit(snake_body + [fruit1])
 fruit_red = spawn_fruit(snake_body + [fruit1, fruit2])
 
 
-def game_logic(direction, change_to, fruit1, fruit2, fruit_red, ):
+def game_logic(direction, change_to, fruit1, fruit2, fruit_red):
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -179,6 +178,9 @@ def game_logic(direction, change_to, fruit1, fruit2, fruit_red, ):
             agent_mode=False
         )
         print_map(vision2)
+
+def step(action, snake_position, snake_body, fruit1, fruit2, fruit_red, GRID_SIZE, CELL_SIZE):
+    
 
 
 if __name__ == "__main__":

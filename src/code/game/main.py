@@ -1,4 +1,12 @@
 import argparse
+from model_vision import (
+    fill_map, get_vision
+)
+from game_logic import (
+    snake_body, snake_position,
+    fruit1, fruit2, fruit_red,
+    GRID_SIZE, CELL_SIZE
+)
 from agent import Agent
 
 parser = argparse.ArgumentParser()
@@ -19,5 +27,16 @@ if args.load:
 if args.dontlearn:
     my_agent.learning = False
 
-# def training():
-#     for _ in range(args.session):
+new_map = fill_map(snake_position, snake_body, fruit1,
+                   fruit2, fruit_red, GRID_SIZE, CELL_SIZE)
+
+state = get_vision(new_map, snake_position, CELL_SIZE, GRID_SIZE, True)
+
+for _ in range(args.sessions):
+    game_over = False
+    while not game_over:
+        action = Agent.choose_action(state)
+        reward, game_over, next_state, snake_position, snake_body,
+        fruit1, fruit2, fruit_red = step()
+        state = next_state
+    Agent.decay_epsilon()
