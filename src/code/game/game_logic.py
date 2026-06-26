@@ -179,8 +179,103 @@ def game_logic(direction, change_to, fruit1, fruit2, fruit_red):
         )
         print_map(vision2)
 
-def step(action, snake_position, snake_body, fruit1, fruit2, fruit_red, GRID_SIZE, CELL_SIZE):
-    
+
+def draw(snake_body, fruit1, fruit2, fruit_red):
+    draw_grid()
+    for pos in snake_body:
+        draw_cell(snake_color, pos)
+    draw_cell(green, fruit1)
+    draw_cell(green, fruit2)
+    draw_cell(red, fruit_red)
+    pygame.display.update()
+    fps.tick(snake_speed)
+
+
+def step(action, snake_position, snake_body, fruit1, fruit2, fruit_red,
+         direction, GRID_SIZE, CELL_SIZE):
+
+    reward = -0.1
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                game_over()
+
+    if action == 'UP' and direction != 'DOWN':
+        direction = 'UP'
+    if action == 'DOWN' and direction != 'UP':
+        direction = 'DOWN'
+    if action == 'RIGHT' and direction != 'LEFT':
+        direction = 'RIGHT'
+    if action == 'LEFT' and direction != 'RIGHT':
+        direction = 'LEFT'
+
+    if direction == 'UP':
+        snake_position[1] -= CELL_SIZE
+    if direction == 'DOWN':
+        snake_position[1] += CELL_SIZE
+    if direction == 'RIGHT':
+        snake_position[0] += CELL_SIZE
+    if direction == 'LEFT':
+        snake_position[0] -= CELL_SIZE
+
+    new_map = fill_map(
+        snake_position,
+        snake_body,
+        fruit1,
+        fruit2,
+        fruit_red,
+        GRID_SIZE,
+        CELL_SIZE
+    )
+
+    state = get_vision(new_map, snake_position, CELL_SIZE, GRID_SIZE,
+                       True)
+
+    if snake_position[0] < 0 or snake_position[0] >= window_x:
+        return (-10, True, state, snake_position, snake_body,
+                fruit1, fruit2, fruit_red, direction)
+    if snake_position[1] < 0 or snake_position[1] >= window_y:
+        return (-10, True, state, snake_position, snake_body,
+                fruit1, fruit2, fruit_red, direction)
+    for block in snake_body[1:]:
+        if snake_position == block:
+            return (-10, True, state, snake_position, snake_body,
+                    fruit1, fruit2, fruit_red, direction)
+
+    ate_green1 = (snake_position == fruit1)
+    ate_green2 = (snake_position == fruit2)
+    ate_red = (snake_position == fruit_red)
+
+    snake_body.insert(0, list(snake_position))
+
+    if ate_green1:
+        reward += 10
+        fruit1 = spawn_fruit(snake_body + [fruit2, fruit_red])
+    if ate_green2:
+        reward += 10
+        fruit2 = spawn_fruit(snake_body + [fruit1, fruit_red])
+    elif ate_red:
+        snake_body.pop()
+        snake_body.pop()
+        reward -= 2
+        if (len(snake_body) == 0):
+            return (-10, True, state, snake_position, snake_body,
+                    fruit1, fruit2, fruit_red, direction)
+        fruit_red = spawn_fruit(snake_body + [fruit1, fruit2])
+    else:
+        snake_body.pop()
+
+    newest_map = fill_map(snake_position, snake_body, fruit1, fruit2,
+                          fruit_red, GRID_SIZE, CELL_SIZE)
+    new_state = get_vision(newest_map, snake_position, CELL_SIZE,
+                           GRID_SIZE, True)
+    state = new_state
+
+    return (reward, False, state, snake_position, snake_body, fruit1, fruit2,
+            fruit_red, direction)
 
 
 if __name__ == "__main__":

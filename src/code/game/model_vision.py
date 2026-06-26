@@ -46,7 +46,7 @@ def get_case(new_map, row, col, GRID_SIZE):
 def get_vision(
     new_map, snake_position, CELL_SIZE, GRID_SIZE, agent_mode: bool = False
 ) -> list:
-    x, y = None, None
+    x, y = 0, 0
     for i, ligne in enumerate(new_map):
         for j, element in enumerate(ligne):
             if [j, i] == [
