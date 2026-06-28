@@ -1,4 +1,4 @@
-IMPLEMENTATION D'UN ALGO WLEARNING EN UTILISANT TENSORFLOW
+IMPLEMENTATION D'UN ALGO QLEARNING, POUR JOUER A SNAKE
 
 qu est ce que le qlearning? => le qlearning est ce qu on appelle un algorithme de reinforcement,
 son objectif est donc de maximiser la recompense que l'agent donne au systeme qui apprend,

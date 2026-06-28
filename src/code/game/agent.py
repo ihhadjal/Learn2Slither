@@ -1,6 +1,8 @@
 from collections import defaultdict
 import random
 import json
+from pathlib import Path
+from datetime import datetime
 
 
 class Agent:
@@ -37,14 +39,17 @@ class Agent:
             max_q_value = self.q_table[state].index(max(self.q_table[state]))
             return self.actions[max_q_value]
 
-    def update(self, state, action, reward, next_state):
+    def update(self, state, action, reward, next_state, done):
         if self.learning is False:
             return
 
         action_index = self.actions.index(action)
         actual_q_value = self.q_table[state][action_index]
-        target = reward + self.gamma * max(self.q_table[next_state])
 
+        if done:
+            target = reward
+        else:
+            target = reward + self.gamma * max(self.q_table[next_state])
         self.q_table[state][action_index] = (
             actual_q_value + self.alpha * (target - actual_q_value)
         )
@@ -53,13 +58,21 @@ class Agent:
         self.epsilon = max(self.epsilon * self.epsilon_decay, self.epsilon_min)
 
     def save(self, file_path):
+        path = Path(file_path)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        new_path = path.with_name(f"{path.stem}_{timestamp}{path.suffix}")
+
         data = {str(k): v for k, v in self.q_table.items()}
-        with open(file_path, "w") as f:
-            json.dump(data, f)
+
+        with open(new_path, "w") as f:
+            json.dump(data, f, indent=4)
 
     def load(self, file_path):
+        self.epsilon = 0
         with open(file_path, 'r') as f:
             data = json.load(f)
+            print(data)
         self.q_table = defaultdict(
             lambda: [0.0, 0.0, 0.0, 0.0],
             {eval(k): v for k, v in data.items()}
