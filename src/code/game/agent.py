@@ -72,7 +72,6 @@ class Agent:
         self.epsilon = 0
         with open(file_path, 'r') as f:
             data = json.load(f)
-            print(data)
         self.q_table = defaultdict(
             lambda: [0.0, 0.0, 0.0, 0.0],
             {eval(k): v for k, v in data.items()}
