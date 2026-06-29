@@ -59,13 +59,14 @@ class Agent:
 
     def save(self, file_path):
         path = Path(file_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         new_path = path.with_name(f"{path.stem}_{timestamp}{path.suffix}")
 
         data = {str(k): v for k, v in self.q_table.items()}
 
-        with open(new_path, "w") as f:
+        with open(new_path, 'w') as f:
             json.dump(data, f, indent=4)
 
     def load(self, file_path):

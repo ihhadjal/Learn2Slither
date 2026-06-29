@@ -1,5 +1,6 @@
 import argparse
 from tqdm import tqdm
+from pathlib import Path
 from model_vision import (
     fill_map, get_vision
 )
@@ -18,8 +19,22 @@ parser.add_argument("-load", type=str, default=None)
 parser.add_argument("-visual", type=str, default=None)
 parser.add_argument("-dontlearn", action='store_true', default=False)
 parser.add_argument("-human", type=str, default=None)
+# parser.add_argument("-speed", type=int, default=None)
+# parser.add_argument("-step_by_step", action="store_true")
 
 args = parser.parse_args()
+
+# if args.step_by_step:
+#     speed = 2
+# else:
+#     speed = args.speed
+
+# "('W', 'S', 'W', 'W')": [
+#     2.2857644273455184,
+#     3.3602816866363914,
+#     3.1789578492949895,
+#     6.52390234285238
+# ],
 
 my_agent = Agent()
 
@@ -89,4 +104,5 @@ if args.human == 'on':
     game_logic(direction, change_to, fruit1, fruit2, fruit_red)
 
 if args.save:
-    my_agent.save("/Users/ihebhadjali/projects/Learn2Slither/src/code/models/model.json")
+    model_path = Path(__file__).resolve().parent.parent / "models" / "model.json"
+    my_agent.save(str(model_path))
