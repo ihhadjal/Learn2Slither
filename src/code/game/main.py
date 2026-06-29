@@ -17,7 +17,7 @@ parser.add_argument("-save", action='store_true')
 parser.add_argument("-load", type=str, default=None)
 parser.add_argument("-visual", type=str, default=None)
 parser.add_argument("-dontlearn", action='store_true', default=False)
-parser.add_argument("-human",type=str, default=None)
+parser.add_argument("-human", type=str, default=None)
 
 args = parser.parse_args()
 
@@ -30,12 +30,12 @@ if args.dontlearn:
     my_agent.learning = False
 
 
+max_size = 0
 for _ in tqdm(range(args.sessions), desc="Training", unit="session"):
     snake_position, direction, snake_body = spawn_snake()
     fruit1 = spawn_fruit(snake_body)
     fruit2 = spawn_fruit(snake_body + [fruit1])
     fruit_red = spawn_fruit(snake_body + [fruit1, fruit2])
-
     new_map = fill_map(
         snake_position,
         snake_body,
@@ -78,11 +78,13 @@ for _ in tqdm(range(args.sessions), desc="Training", unit="session"):
         if args.visual == 'on':
             print_map(terminal_vision)
 
+        max_size = max(max_size, len(snake_body))
         my_agent.update(state, action, reward, next_state, game_over)
         state = next_state
 
     my_agent.decay_epsilon()
 
+print(f"maximum size reached: {max_size}")
 if args.human == 'on':
     game_logic(direction, change_to, fruit1, fruit2, fruit_red)
 

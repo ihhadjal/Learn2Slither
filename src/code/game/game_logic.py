@@ -4,7 +4,7 @@ from model_vision import (
     fill_map, get_vision, print_map
 )
 
-snake_speed = 3.5
+snake_speed = 6
 
 GRID_SIZE = 10
 CELL_SIZE = 65
@@ -250,11 +250,10 @@ def step(action, snake_position, snake_body, fruit1, fruit2, fruit_red,
     ate_red = (snake_position == fruit_red)
 
     snake_body.insert(0, list(snake_position))
-
     if ate_green1:
         reward += 10
         fruit1 = spawn_fruit(snake_body + [fruit2, fruit_red])
-    if ate_green2:
+    elif ate_green2:
         reward += 10
         fruit2 = spawn_fruit(snake_body + [fruit1, fruit_red])
     elif ate_red:
