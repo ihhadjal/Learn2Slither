@@ -36,8 +36,12 @@ class Agent:
         if self.epsilon > rand:
             return random.choice(self.actions)
         else:
-            max_q_value = self.q_table[state].index(max(self.q_table[state]))
-            return self.actions[max_q_value]
+            q_values = self.q_table[state]
+            max_q = max(q_values)
+            best_actions = [
+                a for a, q in zip(self.actions, q_values) if q == max_q
+            ]
+            return random.choice(best_actions)
 
     def update(self, state, action, reward, next_state, done):
         if self.learning is False:

@@ -182,7 +182,7 @@ def game_logic(direction, change_to, fruit1, fruit2, fruit_red):
         print_map(vision2)
 
 
-def draw(snake_body, fruit1, fruit2, fruit_red):
+def draw(snake_body, fruit1, fruit2, fruit_red, speed):
     draw_grid()
     for pos in snake_body:
         draw_cell(snake_color, pos)
@@ -190,7 +190,7 @@ def draw(snake_body, fruit1, fruit2, fruit_red):
     draw_cell(green, fruit2)
     draw_cell(red, fruit_red)
     pygame.display.update()
-    fps.tick(snake_speed)
+    fps.tick(speed)
 
 
 def step(action, snake_position, snake_body, fruit1, fruit2, fruit_red,
@@ -205,14 +205,7 @@ def step(action, snake_position, snake_body, fruit1, fruit2, fruit_red,
             if event.key == pygame.K_ESCAPE:
                 game_over()
 
-    if action == 'UP' and direction != 'DOWN':
-        direction = 'UP'
-    if action == 'DOWN' and direction != 'UP':
-        direction = 'DOWN'
-    if action == 'RIGHT' and direction != 'LEFT':
-        direction = 'RIGHT'
-    if action == 'LEFT' and direction != 'RIGHT':
-        direction = 'LEFT'
+    direction = action
 
     if direction == 'UP':
         snake_position[1] -= CELL_SIZE

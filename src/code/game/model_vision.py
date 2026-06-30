@@ -54,6 +54,7 @@ def get_vision(
                 snake_position[1] // CELL_SIZE,
             ]:
                 x, y = i, j
+
     vision_snake = []
     for i in range(len(new_map)):
         ligne_vue = []
@@ -64,38 +65,46 @@ def get_vision(
                 ligne_vue.append(" ")
         vision_snake.append(ligne_vue)
 
-    found = "W"
     array = []
 
+    found = None
     for i in range(x - 1, -1, -1):
         cell = get_case(new_map, i, y, GRID_SIZE)
         if cell != '0' and cell != ' ':
             found = cell
             break
+    if found is None:
+        found = 'W' if x == 0 else '0'
     array.append(found)
 
-    found = "W"
+    found = None
     for i in range(x + 1, GRID_SIZE):
         cell = get_case(new_map, i, y, GRID_SIZE)
         if cell != '0' and cell != ' ':
             found = cell
             break
+    if found is None:
+        found = 'W' if x == GRID_SIZE - 1 else '0'
     array.append(found)
-    found = "W"
 
+    found = None
     for j in range(y - 1, -1, -1):
         cell = get_case(new_map, x, j, GRID_SIZE)
         if cell != '0' and cell != ' ':
             found = cell
             break
+    if found is None:
+        found = 'W' if y == 0 else '0'
     array.append(found)
-    found = "W"
 
+    found = None
     for j in range(y + 1, GRID_SIZE):
         cell = get_case(new_map, x, j, GRID_SIZE)
         if cell != '0' and cell != ' ':
             found = cell
             break
+    if found is None:
+        found = 'W' if y == GRID_SIZE - 1 else '0'
     array.append(found)
 
     if agent_mode:
