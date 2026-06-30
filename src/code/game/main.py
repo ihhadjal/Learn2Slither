@@ -38,6 +38,7 @@ if args.dontlearn:
 
 
 max_size = 0
+max_steps = 0
 
 if args.human != 'on':
     for _ in tqdm(range(args.sessions), desc="Training", unit="session"):
@@ -89,6 +90,7 @@ if args.human != 'on':
                 print_map(terminal_vision)
 
             max_size = max(max_size, len(snake_body))
+            max_steps = max(max_steps, i)
             my_agent.update(state, action, reward, next_state, game_over)
             state = next_state
             i += 1
@@ -97,7 +99,7 @@ if args.human != 'on':
 else:
     game_logic(direction, change_to, fruit1, fruit2, fruit_red)
 
-print(f"maximum size reached: {max_size}")
+print(f"maximum size reached: {max_size}, maximum steps done: {max_steps}")
 
 if args.save:
     model_path = (
