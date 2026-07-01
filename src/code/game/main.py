@@ -1,4 +1,5 @@
 import argparse
+import sys
 from tqdm import tqdm
 from pathlib import Path
 from model_vision import (
@@ -13,15 +14,44 @@ from game_logic import (
 from agent import Agent
 
 parser = argparse.ArgumentParser()
+argv = sys.argv
 
-parser.add_argument("-sessions", type=int, default=100)
-parser.add_argument("-save", action='store_true')
-parser.add_argument("-load", type=str, default=None)
-parser.add_argument("-visual", type=str, default=None)
-parser.add_argument("-dontlearn", action='store_true', default=False)
-parser.add_argument("-human", type=str, default=None)
-parser.add_argument("-speed", type=int, default=None)
-parser.add_argument("-step_by_step", action="store_true")
+if len(argv) < 2:
+    print("The program needs arguments to run -> -h or --help for help")
+    exit(1)
+
+parser.add_argument(
+    "-sessions", type=int, default=100,
+    help="number of training sessions"
+)
+parser.add_argument(
+    "-save", action='store_true',
+    help="flag to save the model in the models folder"
+)
+parser.add_argument(
+    "-load", type=str, default=None,
+    help="flag to insert the path of the model that you want to load"
+)
+parser.add_argument(
+    "-visual", type=str, default=None,
+    help="flag to activate visual mode"
+)
+parser.add_argument(
+    "-dontlearn", action='store_true', default=False,
+    help="flag to stop a model's learning"
+)
+parser.add_argument(
+    "-human", type=str, default=None,
+    help="activate to play as a human"
+)
+parser.add_argument(
+    "-speed", type=int, default=None,
+    help="set the snake's speed"
+)
+parser.add_argument(
+    "-step_by_step", action="store_true",
+    help="activate to see the snake's movements step by step"
+)
 
 args = parser.parse_args()
 

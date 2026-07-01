@@ -4,8 +4,6 @@ from model_vision import (
     fill_map, get_vision, print_map
 )
 
-# from main import speed
-
 snake_speed = 6
 
 GRID_SIZE = 10
