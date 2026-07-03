@@ -75,7 +75,9 @@ class Agent:
         path.parent.mkdir(parents=True, exist_ok=True)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        new_path = path.with_name(f"{path.stem}_{timestamp}{path.suffix}")
+        new_path = path.with_name(
+            f"{path.stem}_{timestamp}_{self.strategy}{path.suffix}"
+        )
 
         data = {str(k): v for k, v in self.q_table.items()}
 
