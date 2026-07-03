@@ -52,13 +52,17 @@ parser.add_argument(
     "-step_by_step", action="store_true",
     help="activate to see the snake's movements step by step"
 )
+parser.add_argument(
+    "-strategy", type=str, default='qlearning',
+    help="choose a training strategy for the module"
+)
 
 args = parser.parse_args()
 
 if args.step_by_step:
     args.speed = 2
 
-my_agent = Agent()
+my_agent = Agent(strategy=args.strategy)
 
 if args.load:
     my_agent.load(args.load)
@@ -69,7 +73,6 @@ if args.dontlearn:
 
 max_size = 0
 max_steps = 0
-
 if args.human != 'on':
     for _ in tqdm(range(args.sessions), desc="Training", unit="session"):
         snake_position, direction_ag, snake_body = spawn_snake()
@@ -97,6 +100,7 @@ if args.human != 'on':
                 action, snake_position, snake_body, fruit1_ag, fruit2_ag,
                 fruit_red_ag, direction_ag, GRID_SIZE, CELL_SIZE
             )
+            next_action = my_agent.choose_action(next_state)
 
             if args.visual == 'on':
                 draw(snake_body, fruit1_ag, fruit2_ag, fruit_red_ag,
@@ -121,8 +125,11 @@ if args.human != 'on':
 
             max_size = max(max_size, len(snake_body))
             max_steps = max(max_steps, i)
-            my_agent.update(state, action, reward, next_state, game_over)
+            my_agent.update(
+                state, action, reward, next_state, game_over, next_action
+            )
             state = next_state
+            action = next_action
             i += 1
 
         my_agent.decay_epsilon()

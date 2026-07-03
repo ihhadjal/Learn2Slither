@@ -16,7 +16,8 @@ class Agent:
                  epsilon: float = 1.0,
                  epsilon_min: float = 0.01,
                  epsilon_decay: float = 0.995,
-                 learning: bool = True):
+                 learning: bool = True,
+                 strategy: str = 'qlearning'):
 
         self.alpha = alpha
         self.gamma = gamma
@@ -24,6 +25,7 @@ class Agent:
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
         self.learning = learning
+        self.strategy = strategy
 
         self.q_table = defaultdict(
             lambda: [0.0, 0.0, 0.0, 0.0],
@@ -43,7 +45,8 @@ class Agent:
             ]
             return random.choice(best_actions)
 
-    def update(self, state, action, reward, next_state, done):
+    def update(self, state, action, reward, next_state, done,
+               next_action=None):
         if self.learning is False:
             return
 
@@ -52,6 +55,12 @@ class Agent:
 
         if done:
             target = reward
+        elif self.strategy == 'sarsa' and next_action is not None:
+            next_action_index = self.actions.index(next_action)
+            target = (
+                reward
+                + self.gamma * self.q_table[next_state][next_action_index]
+            )
         else:
             target = reward + self.gamma * max(self.q_table[next_state])
         self.q_table[state][action_index] = (
