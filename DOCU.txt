@@ -89,3 +89,12 @@ est presente, puis je la retourne pour que on puisse l'afficher dans boucle prin
 
 
 la Qtable ca va etre un dictionnaire qui va associer chaque etat du snake a 4 Qvaleurs (1 qvaleur par direction)
+
+
+DIFFRENCE ENTRE QLEARNING ET SARSA
+
+qlearning methode de update bcp plus optimiste car ′max​Q(s′,a′), ici on prends l'action maximale que on pourrait avoir,
+ce qui implique que elle est toujours la meilleure solution
+
+alors que le sarsa va prendre la vraie prochaine action du modele ce qui est plus pessimiste comme approche et moins efficace
+mais elle est bcp plus safe comme methode de learning
